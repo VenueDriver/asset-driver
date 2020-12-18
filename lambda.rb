@@ -4,15 +4,15 @@ require 'sam-parameter-environment'
 SamParameterEnvironment.load
 
 # Load all rules.
+require 'rule'
 $LOAD_PATH << File.join(File.dirname(__FILE__), 'rules')
-$triggers = [] # Global list of triggers for the rules.
-$tests = [] # Canaries.
+$rules = [] # Global list of lambda functions.
 Dir.glob("rules/**/*.rb").each{|file| require file}
 
-# Production unit tests.
+# Unit tests, can be run as canaries in the cloud.
 def pre_traffic_lambda_function(event:, context:)
-  # Each canary within this AWS Lambda function is a Ruby lambda function.
-  $tests.each{ |trigger| trigger.call }
+  # Each canary within this AWS Lambda function is a labmda function in Ruby.
+  $rules.each{ |rule| rule.test }
 end
 
 # AWS Lambda function handler.
@@ -20,8 +20,8 @@ def run_rules(event:, context:)
 
   $logger.info 'Running rules...'
 
-  # Each trigger within this AWS Lambda function is a Ruby lambda function.
-  $triggers.each{ |trigger| trigger.call(event) }
+  # Each trigger within this AWS Lambda function is a lambda function in Ruby.
+  $rules.each{ |rule| rule.trigger(event:event) }
 
   {
     statusCode: 200
