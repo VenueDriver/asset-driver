@@ -25,6 +25,12 @@ Resources:
       Handler: lambda.run_rules
       Runtime: runtime
       Runtime: ruby2.5
+  PreTrafficLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda.pre_traffic_lambda_function
+      Runtime: runtime
+      Runtime: ruby2.5
 
 Outputs:
   RunRules:

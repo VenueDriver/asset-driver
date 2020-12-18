@@ -1,0 +1,38 @@
+{
+    "Records": [
+        {
+            "eventVersion": "2.1",
+            "eventSource": "aws:s3",
+            "awsRegion": "us-east-1",
+            "eventTime": "2020-12-17T22:51:41.437Z",
+            "eventName": "ObjectCreated:Put",
+            "userIdentity": {
+                "principalId": "AWS:AIDAIQR64IU7PXKHWHQEI"
+            },
+            "requestParameters": {
+                "sourceIPAddress": "159.250.105.156"
+            },
+            "responseElements": {
+                "x-amz-request-id": "DS1M8RAM6J4Y6JDW",
+                "x-amz-id-2": "hvYkwo9AsB3Q1hopCAlDpuJR7fZvmG6Vs8pVnYT23mm9ot5HHRPRBsKLxYY70MFOh4BRaKBb4exzAOnj6XASB/B8F0VzPL0C"
+            },
+            "s3": {
+                "s3SchemaVersion": "1.0",
+                "configurationId": "ObjectCreated",
+                "bucket": {
+                    "name": "dev.asset-driver.venuedriver.com",
+                    "ownerIdentity": {
+                        "principalId": "AD324QZC7YWYI"
+                    },
+                    "arn": "arn:aws:s3:::dev.asset-driver.venuedriver.com"
+                },
+                "object": {
+                    "key": "dobbshead.jpg",
+                    "size": 351524,
+                    "eTag": "a3dc7b50205dd4237b91b9cbf1fbe5e1",
+                    "sequencer": "005FDBE1035706C5A0"
+                }
+            }
+        }
+    ]
+}

@@ -1,7 +1,9 @@
 source 'https://rubygems.org'
 
+gem 'toml'
+
 gem 'awesome_print'
 
-group :development do
-  gem 'pry'
-end
+gem "test-unit" # Not in the test group!  Needed in production for canaries.
+
+gem 'pry'

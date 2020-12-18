@@ -29,4 +29,38 @@ You can optionally pass an environment:
     $ ruby deploy.rb staging
     $ ruby deploy.rb production
 
+### CI
+
+If you want control over SAM so that you can do a canary deployment or something, then you can do this instead:
+
+    $ sam deploy
+
+Pass the environment with the `--config-env` option, like this:
+
+    $ deploy --config-env=staging
+    $ deploy --config-env=production
+
+## Linking S3 buckets to Lambda functions
+
+Deploying only deploys the Lambda functions.  If it's the first deployment, then you might also need to set up the S3 buckets to trigger Lambda events.  You can do that with:
+
+    $ ruby link.rb
+
+Do it for specific environments with:
+
+    $ ruby link.rb staging
+    $ ruby link.rb production
+
 The script deploys using SAM, then checks the outputs of the stack to find the ARN for the Lambda function that it just deployed.  Then it uses that to set up the event on the S3 buckets.  The ARNs for the S3 buckets are passed through the SAM template parameters into the stack and will also appear in the output, so that all of the information for each stack is available from CloudFormation.  You can configure the ARNs for the specific S3 buckets that that you want to use in the `samconfig.toml` file.
+
+## Development
+
+You can invoke the Lambda function locally like this:
+
+    sam local invoke RunRules --event events/created_file.json
+
+You will need to deploy the default environment first before you'll be able to do much.
+
+Don't forget to `sam build` first, or you'll confuse yourself by looking at output from a previous version of your code.  You might as well make a policy of doing this:
+
+    sam build && sam local invoke RunRules --event events/created_file.json
