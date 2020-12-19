@@ -27,7 +27,7 @@
                     "arn": "arn:aws:s3:::dev.asset-driver.venuedriver.com"
                 },
                 "object": {
-                    "key": "dobbshead.jpg",
+                    "key": "0/original/file.jpg",
                     "size": 351524,
                     "eTag": "a3dc7b50205dd4237b91b9cbf1fbe5e1",
                     "sequencer": "005FDBE1035706C5A0"

@@ -8,12 +8,13 @@ module SamParameterEnvironment
 # a .env file.
   def self.load(environment=nil)
     return unless File.exist? 'samconfig.toml'
-    environment = ARGV[1] || 'dev'
-    TOML.load_file('samconfig.toml')['default']['deploy']['parameters'
+    environment = ARGV[1] || 'default'
+    TOML.load_file('samconfig.toml')[environment]['deploy']['parameters'
       ]['parameter_overrides'].
       split(' ').each do |variable|
         parts = variable.split '='
-        ENV[parts[0].gsub(/(?<!^)[A-Z]/) do "_#$&" end.upcase] = parts[1]
+        value = parts[1].gsub(/^\"(.*)\"$/){ $1 }
+        ENV[parts[0].gsub(/(?<!^)[A-Z]/) do "_#$&" end.upcase] = value
       end
   end
 

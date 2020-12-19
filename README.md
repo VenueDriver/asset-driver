@@ -99,3 +99,11 @@ Here's an example of a rule that checks the event to see if it matches some patt
         $logger.info "File name: #{event_record['s3']['object']['key']}"
       end
     end
+
+## Operation
+
+The AWS control panel for the CloudFormation service is your starting point for operations.  That's where you will find the stacks that you have deployed using SAM.  And that's where you can find links to the resources in those stacks.
+
+### Logging
+
+You can see logs of the activity from your Lambda function by finding the Lambda function in the "resources" section of the CloudFormation stack.  The Lambda function will have a link in its "monitoring" section to the CloudWatch logs.  You can adjust the granularity of the log information by adjusting `$logger.level`, [here](https://github.com/VenueDriver/asset-driver/blob/production/lib/logger-setup.rb#L4).
