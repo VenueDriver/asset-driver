@@ -101,6 +101,18 @@ Here's an example of a rule that checks the event to see if it matches some patt
 
 ## Tests
 
+To run the tests:
+
+    ruby test.rb
+
+That will find all of the test for all of the rules in the project, and run them.
+
+To run the tests in SAM Local, the way that they would run in the cloud:
+
+    sam build && sam local invoke sam build && sam local invoke PreTrafficLambdaFunction
+
+You can use that same `PreTrafficLambdaFunction` as a canary in an AWS CodeDeploy deployment.  It uses real S3 buckets for storing files during tests.
+
 Each rule file in `rules/` can have a corresponding file in `tests/` with any kind of unit testing that you want.  The canary AWS Lambda function that runs as the `PreTrafficLambdaFunction` will call each `test` method in each rule instance during pre-deployment testing and also when using canary testing during deployment with AWS Clode Deploy.  [For example](https://github.com/VenueDriver/asset-driver/blob/production/tests/venue_driver_flyers.rb), you can use [Test::Unit](https://www.rubydoc.info/gems/test-unit/2.3.1/Test/Unit) tests in your rule.  You could probably also use MiniTest.  Or RSpec.  Or whatever you like.
 
 ## Operation
