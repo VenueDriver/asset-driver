@@ -1,6 +1,6 @@
 # Asset Driver
 
-A serverless bot that can listen for events from AWS S3 buckets when files are created, and then does whatever you need it to do.
+A serverless bot that can listen for events from AWS S3 buckets when files are created, check them to see if they match a pattern, and then do whatever you need it to do if so.
 
 The bot adds a feature to S3 buckets that's like the "rules" feature in your email app.  In pseudocode, each email rule says something like this:
 
