@@ -84,8 +84,7 @@ Here's an example of a rule that doesn't do anything, it just prints logging inf
 
     def trigger(event:)
       $logger.info 'Hello, world!'
-      $logger.debug "AWS Lambda event:"
-      $logger.debug event.ai
+      $logger.debug "AWS Lambda event: " + event.ai
     end
 
 One way to write your rules is to deploy something like that and trigger events and then look at them in the CloudWatch logs.  So that you can write the code for examining the events.
@@ -93,10 +92,10 @@ One way to write your rules is to deploy something like that and trigger events 
 Here's an example of a rule that checks the event to see if it matches some pattern:
 
     def trigger(event:)
-      event_record = event[:event]['Records'].first
-      if event_record['eventSource'].eql? 'aws:s3' and
-        event_record['eventName'].eql? 'ObjectCreated:Put'
-        $logger.info "File name: #{event_record['s3']['object']['key']}"
+      event = event[:event]['Records'].first
+      if event['eventSource'].eql? 'aws:s3' and
+        event['eventName'].eql? 'ObjectCreated:Put'
+        $logger.info "File name: #{event['s3']['object']['key']}"
       end
     end
 
