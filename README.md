@@ -99,6 +99,10 @@ Here's an example of a rule that checks the event to see if it matches some patt
       end
     end
 
+## Tests
+
+Each rule file in `rules/` can have a corresponding file in `tests/` with any kind of unit testing that you want.  The canary AWS Lambda function that runs as the `PreTrafficLambdaFunction` will call each `test` method in each rule instance during pre-deployment testing and also when using canary testing during deployment with AWS Clode Deploy.  [For example](https://github.com/VenueDriver/asset-driver/blob/production/tests/venue_driver_flyers.rb), you can use [Test::Unit](https://www.rubydoc.info/gems/test-unit/2.3.1/Test/Unit) tests in your rule.  You could probably also use MiniTest.  Or RSpec.  Or whatever you like.
+
 ## Operation
 
 The AWS control panel for the CloudFormation service is your starting point for operations.  That's where you will find the stacks that you have deployed using SAM.  And that's where you can find links to the resources in those stacks.
