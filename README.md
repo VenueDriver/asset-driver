@@ -68,13 +68,13 @@ The script deploys using SAM, then checks the outputs of the stack to find the A
 
 You can invoke the Lambda function locally like this:
 
-    sam local invoke RunRules --event events/created_file.json
+    sam local invoke RunRules --event tests/events/created_file.json
 
 You will need to deploy the default environment to create the S3 buckets for the `dev` stack first before you'll be able to do much.
 
 Don't forget to `sam build` first, or you'll confuse yourself by looking at output from a previous version of your code.  Like Amazon mentions in the [documentation](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-build.html) for `sam build`, you might as well make a policy of doing this:
 
-    sam build && sam local invoke RunRules --event events/created_file.json
+    sam build && sam local invoke RunRules --event tests/events/created_file.json
 
 ## Rules
 
