@@ -33,17 +33,31 @@ class VenueDriverFlyersRuleTestCase < Test::Unit::TestCase
   def test_event_flyer
     rule = VenueDriverFlyersRule.new
 
-    rule.trigger(event:JSON.parse(File.read('events/created_file.json')))
+    rule.trigger(event:JSON.parse(File.read('tests/events/created_file.json')))
 
     s3 = Aws::S3::Resource.new()
     source_bucket = s3.bucket(@@source_bucket_name)
     output_bucket = s3.bucket(@@output_bucket_name)
 
-    rule.resolutions do |resolution|
-      assert(output_bucket.
-        object("flyer/squared/#{resolution}/event/0.jpg").exists?,
-      "#{resolution}x#{resolution} image exists.")
-      # TODO: Check that each image is valid.  Look for details in the images?
+    rule.resolutions.each do |resolution|
+      output_s3_filename = "flyer/squared/#{resolution}/event/0.jpg"
+      assert(output_bucket.object(output_s3_filename).exists?,
+        "#{resolution}x#{resolution} image exists.")
+
+      # Get the file from S3.
+      output_tmp_filename = '/tmp/asset-driver-image'
+      output_file = output_bucket.object(output_s3_filename).
+          get(response_target: output_tmp_filename)
+
+      assert(MiniMagick::Image.open(output_tmp_filename).valid?,
+        "#{resolution}x#{resolution} image is valid.")
+
+      assert(MiniMagick::Image.open(output_tmp_filename).width.eql?(resolution),
+        "#{resolution}x#{resolution} width is correct.")
+
+      assert(MiniMagick::Image.open(output_tmp_filename).width.
+        eql?(MiniMagick::Image.open(output_tmp_filename).height),
+        "#{resolution}x#{resolution} image is square.")
     end
 
   end
