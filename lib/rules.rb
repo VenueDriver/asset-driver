@@ -1,5 +1,9 @@
 class Rule
-
+  def trigger
+  end
+  def test
+  end
+  public :trigger, :test
 end
 
 $rules = [] # Global list of rule class instances.
