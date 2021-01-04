@@ -1,10 +1,10 @@
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 
-require 'pry'
+# require 'pry'
 require 'awesome_print'
 
-require 'mini_magick'
+require 'ruby-vips'
 
 require 'aws-sdk-s3'
 
@@ -96,35 +96,23 @@ class VenueDriverFlyersRule < Rule
 
     $logger.debug "Source image size: #{File.size(tmp_file_name)} bytes"
 
-    image = MiniMagick::Image.open(tmp_file_name)
+    image = Vips::Image.new_from_file tmp_file_name, access: :sequential
 
-    $logger.debug "Image resolution: #{image.width}x#{image.height}"
+    $logger.debug "Source image format: #{image.format}"
+    $logger.debug "Source image resolution: #{image.width}x#{image.height}"
 
     # Resize to a bounding box the size of the largest axis.
     resize = "#{[width, height].max}x#{[width, height].max}^"
     $logger.debug "Resizing: #{resize}"
-    image.resize resize
+    output_image = image.thumbnail_image(width, height:height, crop:'centre')
 
-    $logger.debug "Image resolution: #{image.width}x#{image.height}"
+    $logger.debug 'Output image resolution: ' +
+      "#{output_image.width}x#{output_image.height}"
 
-    # Crop down from there to the final image.
-    shave = "#{(image.width-width)/2}x#{(image.height-height)/2}"
-    $logger.debug "Shaving: #{shave}"
-    image.shave shave
+    resized_tmp_file = '/tmp/asset-driver-resized-image.jpg'
+    output_image.write_to_file resized_tmp_file, Q:30
 
-    $logger.debug "Image resolution: #{image.width}x#{image.height}"
-
-    crop = "#{width}x#{height}+0+0^"
-    $logger.debug "Final crop to: #{crop}"
-    image.crop crop
-
-    $logger.debug "Image resolution: #{image.width}x#{image.height}"
-
-    resized_tmp_file = '/tmp/asset-driver-resized-image'
-    image.quality 30
-    image.strip.write resized_tmp_file
-
-    $logger.debug 'Stripped ImageMagick output file size: ' +
+    $logger.debug 'Stripped output file size: ' +
       "#{File.size(resized_tmp_file)} bytes"
 
     # Upload the output image.

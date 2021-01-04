@@ -1,7 +1,7 @@
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 
-require 'pry'
+# require 'pry'
 require 'awesome_print'
 
 require 'mini_magick'
