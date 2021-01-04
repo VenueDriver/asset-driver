@@ -48,8 +48,8 @@ If you want control over SAM so that you can do a canary deployment or something
 
 Pass the environment with the `--config-env` option, like this:
 
-    $ deploy --config-env=staging
-    $ deploy --config-env=production
+    $ sam deploy --config-env=staging
+    $ sam deploy --config-env=production
 
 ## Linking S3 buckets to Lambda functions
 
