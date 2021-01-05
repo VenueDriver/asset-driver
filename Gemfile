@@ -1,12 +1,14 @@
 source 'https://rubygems.org'
 
+ruby '2.5.7'
+
 gem 'toml'
 
 gem 'awesome_print'
 
 gem "test-unit" # Not in the test group!  Needed in production for canaries.
 
-gem 'ruby-vips'
+gem 'mini_magick'
 
 gem 'aws-sdk-s3'
 
