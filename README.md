@@ -122,3 +122,9 @@ The AWS control panel for the CloudFormation service is your starting point for 
 ### Logging
 
 You can see logs of the activity from your Lambda function by finding the Lambda function in the "resources" section of the CloudFormation stack.  The Lambda function will have a link in its "monitoring" section to the CloudWatch logs.  You can adjust the granularity of the log information by adjusting `$logger.level`, [here](https://github.com/VenueDriver/asset-driver/blob/production/lib/logger-setup.rb#L4).
+
+### TODO
+
+The `link.rb` script doesn't grant permissions to the relevant S3 buckets for the IAM role that the Lambda function uses.  It probably should.  Ugly and insecure workaround: Grant the `AmazonS3FullAccess` permission policy to the IAM role for the Lambda function.
+
+The code doesn't necessarily know the name or ARN of the source bucket.  So you can either manually grant read access to the source bucket, or maybe all buckets in the account.
