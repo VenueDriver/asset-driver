@@ -1,7 +1,8 @@
+require 'pry' unless ENV['AWS_EXECUTION_ENV']
+
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 
-require 'pry'
 require 'awesome_print'
 
 require 'mini_magick'
@@ -10,7 +11,8 @@ require 'aws-sdk-s3'
 
 class VenueDriverFlyersRuleTestCase < Test::Unit::TestCase
 
-  @@source_bucket_name = ENV['VENUE_DRIVER_FLYERS_SOURCE_BUCKET']
+  @@output_bucket_region = ENV['VENUE_DRIVER_FLYERS_OUTPUT_REGION']
+  @@source_bucket_name = ENV['VENUE_DRIVER_FLYERS_OUTPUT_BUCKET']
   @@output_bucket_name = ENV['VENUE_DRIVER_FLYERS_OUTPUT_BUCKET']
   @@standard_test_image_filename = 'tests/assets/Ocean_Drive_by_night_3.jpg'
 

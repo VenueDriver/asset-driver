@@ -1,7 +1,8 @@
+require 'pry' unless ENV['AWS_EXECUTION_ENV']
+
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 
-require 'pry'
 require 'awesome_print'
 
 require 'mini_magick'
@@ -29,7 +30,8 @@ class VenueDriverFlyersRule < Rule
 
     event = event['Records'].first
 
-    $logger.debug "File name: #{event['s3']['object']['key']}"
+    $logger.info "Bucket name: #{event['s3']['bucket']['name']}"
+    $logger.info "File name: #{event['s3']['object']['key']}"
 
     # Conditions for matching the event:
     if (
@@ -40,7 +42,7 @@ class VenueDriverFlyersRule < Rule
         event['eventName'].eql? 'ObjectCreated:Put' and
 
         # Does the filename match the pattern "*/original/*.*"?
-        event['s3']['object']['key'] =~ /(\d+)\/original\/(.*)/
+        event['s3']['object']['key'] =~ /events\/(\d+)\/\d+\/original\/(.*)/
       )
 
       event_id = $1
@@ -52,24 +54,28 @@ class VenueDriverFlyersRule < Rule
       # If those conditions match, then do this.
       generate_responsive_images(
         event_id:event_id,
+        bucket:event['s3']['bucket']['name'],
         filename:event['s3']['object']['key']
       )
 
+    else
+      $logger.info "Did not meet trigger conditions."
     end
+
   end
 
   #-----------------------------------------------------------------------------
   # Action
   #-----------------------------------------------------------------------------
 
-  def generate_responsive_images(event_id:, filename:)
+  def generate_responsive_images(event_id:, bucket:, filename:)
     $logger.info "Generating responsive images for: #{filename}"
 
     # Generate each resolution that we need.
     resolutions.each do |width|
       # Generate the square variants.
       generate_image(
-        source_bucket_name: ENV['VENUE_DRIVER_FLYERS_SOURCE_BUCKET'],
+        source_bucket_name: bucket,
         source_filename: filename,
         output_bucket_name: ENV['VENUE_DRIVER_FLYERS_OUTPUT_BUCKET'],
         output_filename: "flyer/squared/#{width}/event/#{event_id}.jpg",
@@ -127,8 +133,13 @@ class VenueDriverFlyersRule < Rule
     $logger.debug 'Stripped ImageMagick output file size: ' +
       "#{File.size(resized_tmp_file)} bytes"
 
+    $logger.info 'Uploading to: ' +
+      "#{ENV['VENUE_DRIVER_FLYERS_OUTPUT_REGION']} #{output_bucket_name}:#{output_filename}"
+
     # Upload the output image.
-    s3.bucket(output_bucket_name).object(output_filename).
+    output_s3 = Aws::S3::Resource.new(
+      region: ENV['VENUE_DRIVER_FLYERS_OUTPUT_REGION'])
+    output_s3.bucket(output_bucket_name).object(output_filename).
       upload_file(resized_tmp_file, acl: 'public-read')
 
   end
