@@ -4,19 +4,19 @@ Description: >
   asset-driver
 
 Parameters:
-  VenueDriverFlyersSourceBucket:
+  VenueDriverFlyersOutputRegion:
     Type: String
   VenueDriverFlyersOutputBucket:
     Type: String
 
 Globals:
   Function:
-    CodeUri: ./
+    Runtime: ruby2.5
     Timeout: 30
-    MemorySize: 256
+    MemorySize: 512
     Environment:
       Variables:
-        VENUE_DRIVER_FLYERS_SOURCE_BUCKET: !Ref 'VenueDriverFlyersSourceBucket'
+        VENUE_DRIVER_FLYERS_OUTPUT_REGION: !Ref 'VenueDriverFlyersOutputRegion'
         VENUE_DRIVER_FLYERS_OUTPUT_BUCKET: !Ref 'VenueDriverFlyersOutputBucket'
 
 Resources:
@@ -24,21 +24,19 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: lambda.run_rules
-      Runtime: ruby2.5
   PreTrafficLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: lambda.pre_traffic_lambda_function
-      Runtime: ruby2.5
       Timeout: 900
 
 Outputs:
   RunRules:
     Description: "Lambda function for running the asset processing rules."
     Value: !GetAtt RunRules.Arn
-  VenueDriverFlyersSourceBucket:
-    Description: "Source bucket to watch for Venue Driver flyer updates."
-    Value: !Sub "${VenueDriverFlyersSourceBucket}"
+  VenueDriverFlyersOutputRegion:
+    Description: "The AWS region of the output bucket."
+    Value: !Sub "${VenueDriverFlyersOutputRegion}"
   VenueDriverFlyersOutputBucket:
     Description: "Output bucket to for processed Venue Driver flyer images."
     Value: !Sub "${VenueDriverFlyersOutputBucket}"
