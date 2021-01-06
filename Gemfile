@@ -4,7 +4,7 @@ ruby '2.5.7'
 
 gem 'toml'
 
-gem 'awesome_print'
+gem 'awesome_print', '~> 2.0.0.pre2'
 
 gem "test-unit" # Not in the test group!  Needed in production for canaries.
 
