@@ -12,7 +12,7 @@ Parameters:
 Globals:
   Function:
     Runtime: ruby2.5
-    Timeout: 30
+    Timeout: 900
     MemorySize: 512
     Environment:
       Variables:
